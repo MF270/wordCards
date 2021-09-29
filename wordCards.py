@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import filedialog
 from docx import Document
 from docx.enum.section import WD_ORIENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH,WD_BREAK
 from docx.shared import Inches,Pt
 
 def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=""):
@@ -30,18 +30,22 @@ def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=
     for term in terms:
         paragraph = document.add_paragraph()
         paragraph.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = paragraph.add_run(term[0] + "\n")
+        run = paragraph.add_run(term[0])
         run.font.name = 'Microsoft JhengHei'
         if len(term[0]) <=2:
             run.font.size = Pt(96)
         elif len(term[0]) == 3:
             run.font.size = Pt(72)
         else:
-            run.font.size = Pt(64)
+            run.font.size = Pt(56)
         #Characters should be big
+        run.add_break(WD_BREAK.PAGE)
         run = paragraph.add_run(term[1] + "\n")
         run.font.name = 'Calibri'
-        run.font.size = Pt(48)
+        if len(term[1])<12:
+            run.font.size = Pt(48)
+        else:
+            run.font.size = Pt(36)
         #Pinyin pretty much always fits in size 48
         run = paragraph.add_run(term[2])
         run.font.name = 'Calibri'
