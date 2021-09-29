@@ -1,3 +1,4 @@
+"""Makes your word cards for you!!"""
 # coding: utf8
 import csv
 import sys
@@ -8,8 +9,8 @@ from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches,Pt
 #helpmepls
-
-def genCards(inputPath:str="",outputPath:str="/",name:str="",lesson:str=""):
+def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=""):
+    """Makes and outputs cards given a csv and file output"""
     #Sets basic formatting for the whole doc like setup + header
     if not inputPath or not outputPath:
         sys.exit()
@@ -19,7 +20,7 @@ def genCards(inputPath:str="",outputPath:str="/",name:str="",lesson:str=""):
     sections[0].orientation = WD_ORIENT.LANDSCAPE
     sections[0].page_width = Inches(6)
     sections[0].page_height = Inches(4)
-    sections[0].header.paragraphs[0].text = f"{name} \n {lesson}"
+    sections[0].header.paragraphs[0].text = f"{userName} \n {userLesson}"
     #Iterates through each sub-list in terms
     with open(inputPath,encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file,delimiter=',')
@@ -37,7 +38,7 @@ def genCards(inputPath:str="",outputPath:str="/",name:str="",lesson:str=""):
             run.font.size = Pt(72)
         else:
             run.font.size = Pt(64)
-        #Characters should be big 
+        #Characters should be big
         run = paragraph.add_run(term[1] + "\n")
         run.font.name = 'Calibri'
         run.font.size = Pt(48)
@@ -50,21 +51,23 @@ def genCards(inputPath:str="",outputPath:str="/",name:str="",lesson:str=""):
             run.font.size = Pt(24)
         elif len(term[2]) > 8:
             run.font.size = Pt(32)
-        else:   
+        else:
             run.font.size = Pt(48)
         #Definitions can get long, so they need to be smaller
 
-    document.save(f'{outputPath}/{lesson}cards.docx')
+    document.save(f'{outputPath}/{userLesson}cards.docx')
     #Bam, saved as a docx
     print("Done!")
 
-def displayDir(Var):
+def displayDir(var):
+    """Makes the output 'browse' button work"""
     path = filedialog.askdirectory()
-    Var.set(path)
-     
-def openInput(Var):
+    var.set(path)
+
+def openInput(var):
+    """Makes the input 'browse' button work"""
     words = filedialog.askopenfile(mode="r",initialdir="/")
-    Var.set(words.name)
+    var.set(words.name)
     words.close()#This is almost aggressively bad code, but it's (hopefully) functional!
 
 #Initializing window object w/title
@@ -82,8 +85,10 @@ name_ent.grid(row=0,column=1,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
 
 info = "Please fill all boxes. Input file should be a spreadsheet saved as a .csv"
 info2 = "Each row should read [character][pinyin][definition]"
-tk.Label(root,text=info,font=("Helvetica",10)).grid(row=0,column=2,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
-tk.Label(root,text=info2,font=("Helvetica",10)).grid(row=1,column=2,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
+infopanel = tk.Label(root,text=info,font=("Helvetica",10))
+infopanel.grid(row=0,column=2,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
+infopanel2 = tk.Label(root,text=info2,font=("Helvetica",10))
+infopanel2.grid(row=1,column=2,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
 
 warning = "Please make use of the browse buttons"
 #Handles the lesson (affects header and document name)
@@ -94,12 +99,13 @@ lesson_ent = tk.Entry(root,textvariable=lesson)
 lesson_ent.grid(row=1,column=1,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
 
 #Handles the input path
-input = tk.StringVar()
+inputpath = tk.StringVar()
 input_label = tk.Label(root,text='Input File (.csv):',font=("Helvetica",12))
 input_label.grid(row=2,column=0,padx=3,pady=3)
 input_ent = tk.Entry(root,textvariable=input)
 input_ent.grid(row=2,column=1,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
-browseOutput = tk.Button(root,text="Browse",command= lambda: openInput(input),font=("Helvetica",12))
+browseOutput = tk.Button(root,text="Browse",command= lambda:
+openInput(inputpath),font=("Helvetica",12))
 browseOutput.grid(row=2,column=2,padx=3,pady=3,sticky="ew")
 
 #Handles the output path, a little more complex
@@ -108,11 +114,14 @@ output_label = tk.Label(root,text='Output Folder:',font=("Helvetica",12))
 output_label.grid(row=3,column=0,padx=3,pady=3)
 output_ent = tk.Entry(root,textvariable=output)
 output_ent.grid(row=3,column=1,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
-browseOutput = tk.Button(root,text="Browse",command= lambda: displayDir(output),font=("Helvetica",12))
+browseOutput = tk.Button(root,text="Browse",command=
+lambda: displayDir(output),font=("Helvetica",12))
 browseOutput.grid(row=3,column=2,padx=3,pady=3,sticky="ew")
 
-#Start button, when called, gets inputs from all the text boxes. Do not leave the input or output boxes blank. That might get screwy fast.
-start = tk.Button(root,text='Start',command = lambda : genCards(input.get(),output.get(),name.get(),lesson.get()))
+#Start button, when called, gets inputs from all the text boxes.
+#Do not leave the input or output boxes blank. That might get screwy fast.
+start = tk.Button(root,text='Start',command =
+lambda : genCards(inputpath.get(),output.get(),name.get(),lesson.get()))
 start.grid(row=4,column=1,padx=3,pady=3,ipadx=3,ipady=3,sticky="ew")
 
 #Resizes the rows/columns so it looks half-decent
