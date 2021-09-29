@@ -8,7 +8,7 @@ from docx import Document
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches,Pt
-#helpmepls
+
 def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=""):
     """Makes and outputs cards given a csv and file output"""
     #Sets basic formatting for the whole doc like setup + header
