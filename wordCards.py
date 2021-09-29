@@ -7,7 +7,7 @@ from docx import Document
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches,Pt
-
+#help
 
 def genCards(inputPath:str="",outputPath:str="/",name:str="",lesson:str=""):
     #Sets basic formatting for the whole doc like setup + header
