@@ -31,7 +31,7 @@ def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=
         paragraph = document.add_paragraph()
         paragraph.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run(term[0])
-        run.font.name = 'Microsoft JhengHei'
+        run.font.name = 'Microsoft JhengHei UI'
         if len(term[0]) <=2:
             run.font.size = Pt(96)
         elif len(term[0]) == 3:
@@ -66,7 +66,7 @@ def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=
 def displayDir(var):
     """Makes the output 'browse' button work"""
     path = filedialog.askdirectory()
-    var.set(path)
+    var.set(path.name)
 
 def openInput(var):
     """Makes the input 'browse' button work"""
