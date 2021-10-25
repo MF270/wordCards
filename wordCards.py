@@ -66,7 +66,7 @@ def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=
 def displayDir(var):
     """Makes the output 'browse' button work"""
     path = filedialog.askdirectory()
-    var.set(path.name)
+    var.set(path)
 
 def openInput(var):
     """Makes the input 'browse' button work"""
