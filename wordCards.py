@@ -5,6 +5,7 @@ import sys
 import tkinter as tk
 from tkinter import filedialog
 from docx import Document
+from docx.oxml.ns import qn
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH,WD_BREAK
 from docx.shared import Inches,Pt
@@ -32,6 +33,8 @@ def genCards(inputPath:str="",outputPath:str="/",userName:str="",userLesson:str=
         paragraph.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run(term[0])
         run.font.name = 'Microsoft JhengHei UI'
+        r=run._element
+        r.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft JhengHei UI")
         if len(term[0]) <=2:
             run.font.size = Pt(96)
         elif len(term[0]) == 3:
